@@ -34,3 +34,4 @@ signal = ta.sma(RMI,sig)
 PUluOS=close<lower and RMI<20 and (ta.sma(volume[1],11)<ta.sma(volume[1],6) and ta.sma(volume[1],6)<ta.sma(volume[1],2))
 
 plotshape(PUluOS, "Long", shape.arrowup, location.belowbar, color.green,  text = "PU_OS")
+alertcondition(PUluOS, title="PU'lu OS Alarmı Kur", message="PU'lu OS koşulu oluştu")
