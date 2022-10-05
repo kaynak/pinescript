@@ -1,0 +1,36 @@
+//@version=5
+indicator("PU OS", overlay = true)
+// BBand inputs
+source = close
+length = input.int(20, minval=1)
+mult = input.float(2.0, minval=0.001, maxval=50)
+basis = ta.sma(source, length)
+dev = mult * ta.stdev(source, length)
+upper = basis + dev
+lower = basis - dev
+offset = input.int(0, "Offset", minval = -500, maxval = 500)
+plot(basis, "Basis", color=#872323, offset = offset)
+p1 = plot(upper, "Upper", color=color.teal, offset = offset)
+p2 = plot(lower, "Lower", color=color.teal, offset = offset)
+fill(p1, p2, title = "Background", color=color.new(color.blue, 95))
+// inputs - RMI
+len = input.int(20, title="Length")
+mom = input.int(4, title="Momentum",minval=0)
+ob = input.int(70,title="Overbought")
+os = input.int(30,title="Oversold")
+c = close
+docol = input.bool(true,title="Change Color?")
+dosignal = input.bool(true,title="Show Signal Line?")
+sig = input.int(6,title="Signal Length")
+dohist = input.bool(false,title="Show Hist?")
+//calc - RMI
+yuksek = math.max(c - c[mom],0)
+dusuk = math.max(c[mom] - c,0)
+up = ta.ema(yuksek, len)
+dn = ta.ema(dusuk, len)
+RMI = dn == 0 ? 0 : 100 - 100 / (1 + up / dn)
+signal = ta.sma(RMI,sig)
+// RMI //
+PUluOS=close<lower and RMI<20 and (ta.sma(volume[1],11)<ta.sma(volume[1],6) and ta.sma(volume[1],6)<ta.sma(volume[1],2))
+
+plotshape(PUluOS, "Long", shape.arrowup, location.belowbar, color.green,  text = "PU_OS")
